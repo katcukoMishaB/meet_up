@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeetUpOur</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <Style>
+    body {
+    background-color: #5affb8;
+    font-family: "Comfortaa", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+}
+
+.intro-title {
+    margin: 20px 0 40px;
+}
+
+.basic-text {
+    padding: 0 0 20px;
+}
+
+.content-section {
+    border-radius: 30px;
+    padding: 20px;
+    box-sizing: border-box;
+    max-width: 540px;
+}
+
+.content-section_theme_yellow {
+    background-color:rgb(251, 255, 136);
+    border-radius: 30px;
+    box-shadow: 12px 12px 2px 1px rgb(255, 142, 240);
+    padding: 20px;
+}
+
+.meet-start {
+    margin-top: 100px;
+    text-align: center;
+    
+}
+
+.start-title {
+    margin-bottom: 50px;
+}
+
+.content-section_theme_white {
+    background-color: rgb(255, 255, 255);
+    border-radius: 30px;
+    padding: 20px;
+    border: 2px solid black;
+}
+
+.button-start {
+    background-color: #b0ffde;
+    border-radius: 15px;
+    width: 200px;
+    height: 50px;
+    font-size: 30px;
+    font-weight: 700;
+    transition: background-color 0.2s ease;
+}
+
+.button-start:active {
+    background-color: #32a072;
+}
+
+.description__form {
+    margin-top: 30px;
+    margin-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.form__accent {
+    margin-top: 40px;
+    background: #ffffff;
+    border: #d6d659;
+    padding: 20px 100px;
+}
+
+.choice {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 0px;
+}
+
+.first_choice, .second_choice, .user-input {
+    display: none;
+    margin-top: 100px;
+}
+
+.checkbox_accent {
+    display: none; /* Скрыть сам чекбокс */
+}
+
+.checkbox_accent + label {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #9bebff;
+    text-align: center;
+}
+
+.checkbox_accent:checked + label  {
+    background-color: #acd1da; 
+    color: #fff;
+}
+
+
+
+
+.matching-users {
+    margin-top: 100px;
+    text-align: center;
+    
+}
+
+    </Style>     
+</head>
+<body> 
+   
+    <main> 
+        <div class="container"> 
+
+
+            <!-- Базовый блок для всех экранов --> 
+            <section class="user-info content-section content-section_theme_yellow"> 
+                <h1 class="intro-title">MeetUp</h1> 
+                <p class="basic-text" id="usernameDisplay">@</p> 
+                <p class="basic-text" id="test"> 
+                Давайте искать друга друга вместе, ведь это круто!💥 
+                </p> 
+            </section> 
+
+
+            <!-- Кнопка, которая проверяет регистрацию. Если юзер есть в БД, то отправляет его на экран поиска, 
+                если нет то на экран выбора тегов --> 
+            <section class="meet-start content-section content-section_theme_white"> 
+                <h2 class="start-title">Давайте приступим!</h2> 
+                <button class="button-start" id="button-starts">Начнем!</button> 
+            </section> 
+
+
+            <!-- Секция с выбором тегов, она будет повторяться и при первом заходе и при повторном обновлении тегов --> 
+            <section class="first_choice content-section content-section_theme_yellow"> 
+                <section class="description__form"> 
+                    <h2 class="input-title">Опишите себя!:</h2> 
+                    <input class="form__accent" type="text" id="descriptionInput" placeholder="Тут вы описываете себя!"> 
+                </section> 
+                <h2 class="start-title">Выберите понравившиеся вам темы! Это поможет с подбором людей специально для вас. </h2> 
+                <form class="choice"> 
+                    <input class="checkbox_accent cinema" type="checkbox" id="option1" name="options[]" value="Кино"> 
+                    <label for="option1">Кино</label><br> 
+                 
+                    <input class="checkbox_accent literature" type="checkbox" id="option2" name="options[]" value="Литература"> 
+                    <label for="option2">Литература</label><br> 
+                 
+                    <input class="checkbox_accent sport" type="checkbox" id="option3" name="options[]" value="Музыка"> 
+                    <label for="option3">Музыка</label><br> 
+ 
+                    <input class="checkbox_accent art" type="checkbox" id="option4" name="options[]" value="Искусство"> 
+                    <label for="option4">Искусство</label><br> 
+ 
+                    <input class="checkbox_accent sport" type="checkbox" id="option5" name="options[]" value="Спорт"> 
+                    <label for="option5">Спорт</label><br> 
+ 
+                    <input class="checkbox_accent sport" type="checkbox" id="option6" name="options[]" value="Готовка"> 
+                    <label for="option6">Готовка</label><br> 
+ 
+                    <input class="checkbox_accent sport" type="checkbox" id="option7" name="options[]" value="Видео игры"> 
+                    <label for="option7">Видео игры</label><br> 
+ 
+                    <input class="checkbox_accent sport" type="checkbox" id="option8" name="options[]" value="Инвестиции"> 
+                    <label for="option8">Инвестиции</label><br> 
+ 
+                    <input class="checkbox_accent sport" type="checkbox" id="option9" name="options[]" value="Танцы"> 
+                    <label for="option9">Танцы</label><br> 
+ 
+                    <input class="checkbox_accent sport" type="checkbox" id="option10" name="options[]" value="Мода"> 
+                    <label for="option10">Мода</label><br> 
+                 
+                    <input type="submit" value="Подтвердить" id="TagsChoice"> 
+                </form>                
+            </section>
+
+
+            <!-- Секция для отображения подобранных пользователей -->
+            <section class="matching-users content-section content-section_theme_white" style="display: none;">
+                <h2 class="start-title">Пользователи которые имеют схожие интересы!</h2>
+                <div id="matchingUser">
+                    <p id="userInfo"></p>
+                    <button class="button-skip" id="skipButton">Пропустить</button>
+                </div>
+            </section> 
+        </div> 
+    </main> 
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+        const defaultUrl = "https://6ca0-83-142-12-120.ngrok-free.app";
+        const tg = window.Telegram.WebApp; 
+
+        document.getElementById('usernameDisplay').textContent = `@${tg.initDataUnsafe.user.username}`;
+
+        //Выделяем определенные айди по которым будут активироваться функции
+        const sendUserData = document.getElementById('button-starts');
+        const TagsChoice= document.getElementById('TagsChoice');
+        
+        //Отправка данных через эту функцию
+        async function fetchData(endpoint, data) {
+            try {
+                const response = await axios.post(`${defaultUrl}/${endpoint}`, data);
+                return response.data;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+
+        async function deleteData(endpoint, data) {
+            try {
+                const response = await axios.delete(`${defaultUrl}/${endpoint}`);
+                return response.data;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        
+        // Проверка на регистрацию. Если юзер есть в БД, то переход на поиск людей,если нет то на экран выбора тегов
+        async function sendUserDataToServer() 
+        {
+            try {
+                    const userId = tg.initDataUnsafe.user.id;
+                    const firstName = tg.initDataUnsafe.user.first_name;
+                    const username = tg.initDataUnsafe.user.username;
+                    const allowsWriteToPm = tg.initDataUnsafe.user.allows_write_to_pm;
+                
+                const response = await fetchData('send-user-data', {
+                    id: userId,
+                    first_name: firstName,
+                    username: username,
+                    allows_write_to_pm: allowsWriteToPm
+                });
+
+                await deleteOldEncounters();
+
+                if (response.message === 'User already exists') {
+                    MatchingUsers(userId) 
+                } 
+                else {
+    
+                document.querySelector('.meet-start').style.display = 'none';
+                document.querySelector('.first_choice').style.display = 'block';
+            }
+
+                
+            } catch (error) {
+                console.error('Error sending data to server:', error);
+            }
+        }
+        
+        async function deleteOldEncounters() 
+        {
+        try {
+            const response = await deleteData('delete-encounters');
+            console.log(response);
+        } catch (error) {
+            console.error('Error deleting old encounters:', error);
+        }
+        }
+
+
+        sendUserData.addEventListener('click', sendUserDataToServer);
+
+        
+        TagsChoice.addEventListener('click', function(event) {
+            event.preventDefault();
+            const description = document.getElementById('descriptionInput').value;
+            const checkboxes = document.querySelectorAll('.first_choice input[type="checkbox"]:checked');
+            const selectedOptions = Array.from(checkboxes).map(checkbox => checkbox.value);
+            
+            // Отправка данных описания и чекбоксов на сервер
+            fetchData('send-description-and-options', {
+                user_id: tg.initDataUnsafe.user.id, 
+                description: description,
+                tags: selectedOptions 
+
+                }).then(response => {
+                
+                document.querySelector('.first_choice').style.display = 'none';
+                
+            }).catch(error => {
+                console.error('Error sending data:', error);
+            });
+        });
+
+
+        let currentIndex = 0;
+        let matchingUsers = [];
+
+        async function MatchingUsers(userId) {
+        try {
+            const response = await fetchData('find-matches', {
+                id: userId,
+            });
+
+            matchingUsers = response.matches;
+            if (matchingUsers.length > 0) {
+                currentIndex = 0;
+                showCurrentUser();
+                document.querySelector('.meet-start').style.display = 'none';
+                document.querySelector('.matching-users').style.display = 'block';
+            } else {
+                document.querySelector('.meet-start').style.display = 'none';
+                document.querySelector('.matching-users').style.display = 'block';
+                document.getElementById('userInfo').textContent = 'Нет подходящих пользователей';
+            }
+            } catch (error) {
+                console.error('Error fetching matching users:', error);
+            }
+            }
+
+
+            function showCurrentUser() 
+            {
+            const userElement = document.getElementById('userInfo');
+            if (currentIndex < matchingUsers.length) {
+                const user = matchingUsers[currentIndex];
+                userElement.textContent = JSON.stringify(user);
+            } else {
+                userElement.textContent = 'Нет больше пользователей';
+            }
+            }
+
+            async function addSkippedUserToDB(encountered_user_id) {
+                try {
+                    const response = await fetchData('skip-user', {
+                        user_id: tg.initDataUnsafe.user.id,
+                        encountered_user_id: encountered_user_id,
+                    });
+                    console.log(response); 
+                } catch (error) {
+                    console.error('Error adding skipped user to database:', error);
+                }
+            }
+
+        skipButton.addEventListener('click', async () => {
+        const user = matchingUsers[currentIndex];
+        await addSkippedUserToDB(user.encountered_user_id);
+        currentIndex++;
+        showCurrentUser();
+        });
+
+        
+        });
+        </script>   
+    </body>
+</html>
