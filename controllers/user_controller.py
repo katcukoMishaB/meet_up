@@ -2,6 +2,8 @@ from app import app, db
 from flask import jsonify
 from flask_restful import Resource, request
 from models.user_model import User
+from models.tags_model import Tags
+
 from flask_cors import CORS
 CORS(app)
 
@@ -20,11 +22,20 @@ class UserController(Resource):
             return jsonify({'message': 'User data incomplete'}), 400
 
         existing_user = User.query.filter_by(id=user_id).first()
+        existing_tags = Tags.query.filter_by(user_id=user_id).first()
 
+        if existing_user and existing_user.username != username:
+            existing_user.username = username
+            db.session.commit()
+
+        if existing_user and existing_tags:
+            print('user and tags already in')
+            return jsonify({'message': 'User and Tags already exists'}), 200
+        
         if existing_user:
-            print('already in')
-            return jsonify({'message': 'User already exists'}), 200
-
+            print('user already in')
+            return jsonify({'message': 'Tags already exists'}), 200
+        
         new_user = User(
             id=user_id,
             first_name=first_name,

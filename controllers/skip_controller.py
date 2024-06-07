@@ -38,6 +38,6 @@ class SkipController(Resource):
         print(data)
         user_id = data.get('user_id')
         threshold_date = datetime.utcnow() - timedelta(minutes=1)  
-        UserEncounter.query.filter(UserEncounter.last_encountered < threshold_date, UserEncounter.user_id == user_id ).delete()
+        print(UserEncounter.query.filter(UserEncounter.last_encountered < threshold_date, UserEncounter.user_id == user_id ).delete())
         db.session.commit()
         return jsonify({'message': 'Old encounters cleaned up successfully'}), 200

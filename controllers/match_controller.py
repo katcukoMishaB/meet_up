@@ -29,7 +29,7 @@ class MatchController(Resource):
     def find_matches():
         data = request.get_json()
         print(data)
-        "1188181183"  
+        """1188181183"""
         user_id = data.get('id')
         user = User.query.get(user_id)
         if not user:
@@ -44,10 +44,12 @@ class MatchController(Resource):
         users = User.query.filter(User.id != user_id).all()
         print(users)
         for potential_match in users:
-            check_encounter = UserEncounter.query.filter(UserEncounter.encountered_user_id == potential_match.id).first()
+            check_encounter = UserEncounter.query.filter(UserEncounter.user_id == user.id, UserEncounter.encountered_user_id == potential_match.id).first()
             print(check_encounter)
-            if check_encounter is not None and check_encounter.skipped == 1:
+            if check_encounter:
                 continue
+            """if check_encounter is not None and check_encounter.skipped == 1:
+                continue"""
             potential_match_tag = Tags.query.filter(Tags.user_id == potential_match.id).first()
             potential_match_description = potential_match_tag.description
             print(potential_match)

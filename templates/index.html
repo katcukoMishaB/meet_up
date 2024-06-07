@@ -217,15 +217,20 @@ h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote {
     </main> 
         <script>
         document.addEventListener("DOMContentLoaded", function() {
-
         const defaultUrl = "https://f1e3-83-142-11-113.ngrok-free.app";
         const tg = window.Telegram.WebApp; 
-
-        document.getElementById('usernameDisplay').textContent = `@${tg.initDataUnsafe.user.username}`;
-
-        //Выделяем определенные айди по которым будут активироваться функции
         const sendUserData = document.getElementById('button-starts');
         const TagsChoice= document.getElementById('TagsChoice');
+        document.getElementById('usernameDisplay').textContent = `@${tg.initDataUnsafe.user.username}`;
+        if (tg.initDataUnsafe.user.username == undefined) {
+            document.getElementById('usernameDisplay').textContent = `У вас нет никнейма, сделайте никнейм, чтобы продолжить Меetup/ить`; 
+            sendUserData.style.display = 'none';
+        } 
+        else {
+            document.getElementById('usernameDisplay').textContent = `@${tg.initDataUnsafe.user.username}`;  
+            }
+        //Выделяем определенные айди по которым будут активироваться функции
+        
         
         //Отправка данных через эту функцию
         async function fetchData(endpoint, data) {
@@ -252,10 +257,10 @@ h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote {
         async function sendUserDataToServer() 
         {
             try {
-                    const userId = tg.initDataUnsafe.user.id;
-                    const firstName = tg.initDataUnsafe.user.first_name;
-                    const username = tg.initDataUnsafe.user.username;
-                    const allowsWriteToPm = tg.initDataUnsafe.user.allows_write_to_pm;
+                const userId = tg.initDataUnsafe.user.id;
+                const firstName = tg.initDataUnsafe.user.first_name;
+                const username = tg.initDataUnsafe.user.username;
+                const allowsWriteToPm = tg.initDataUnsafe.user.allows_write_to_pm;
                 
                 const response = await fetchData('send-user-data', {
                     id: userId,
@@ -266,7 +271,7 @@ h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote {
 
                 await deleteOldEncounters();
 
-                if (response.message === 'User already exists') {
+                if (response.message === 'User and Tags already exists') {
                     MatchingUsers(userId) 
                 } 
                 else {
@@ -302,17 +307,17 @@ h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote {
             const description = document.getElementById('descriptionInput').value;
             const checkboxes = document.querySelectorAll('.first_choice input[type="checkbox"]:checked');
             const selectedOptions = Array.from(checkboxes).map(checkbox => checkbox.value);
-            
+            const userId = tg.initDataUnsafe.user.id;
             // Отправка данных описания и чекбоксов на сервер
             fetchData('send-description-and-options', {
-                user_id: tg.initDataUnsafe.user.id, 
+                user_id: userId, 
                 description: description,
                 tags: selectedOptions 
 
                 }).then(response => {
                 
                 document.querySelector('.first_choice').style.display = 'none';
-                
+                MatchingUsers(userId) 
             }).catch(error => {
                 console.error('Error sending data:', error);
             });
