@@ -45,7 +45,8 @@ class MatchController(Resource):
         print(users)
         for potential_match in users:
             check_encounter = UserEncounter.query.filter(UserEncounter.encountered_user_id == potential_match.id).first()
-            if check_encounter is not None and check_encounter.skipped == 1  :
+            print(check_encounter)
+            if check_encounter is not None and check_encounter.skipped == 1:
                 continue
             potential_match_tag = Tags.query.filter(Tags.user_id == potential_match.id).first()
             potential_match_description = potential_match_tag.description

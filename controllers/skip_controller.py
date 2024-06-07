@@ -32,9 +32,12 @@ class SkipController(Resource):
         db.session.commit()
         return jsonify({'message': 'User skipped successfully'}), 200
 
-    @app.route('/delete-encounters', methods=['DELETE'])
+    @app.route('/delete-encounters', methods=['POST'])
     def cleanup_encounters():
+        data = request.get_json()
+        print(data)
+        user_id = data.get('user_id')
         threshold_date = datetime.utcnow() - timedelta(minutes=1)  
-        UserEncounter.query.filter(UserEncounter.last_encountered < threshold_date).delete()
+        UserEncounter.query.filter(UserEncounter.last_encountered < threshold_date, UserEncounter.user_id == user_id ).delete()
         db.session.commit()
         return jsonify({'message': 'Old encounters cleaned up successfully'}), 200
